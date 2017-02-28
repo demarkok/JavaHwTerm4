@@ -14,13 +14,25 @@ public class LazyFactory {
         return new lockFreeLazySupplier<>(supplier);
     }
 
-    private static class LazySupplier<T> implements Lazy<T> {
-        private static Object marker = new Object();
-        private Object value =  marker;
-        private Supplier<T> supplier;
+
+    private static abstract class AbstractSupplier<T> implements Lazy<T> {
+        protected static Object marker = new Object();
+        volatile protected Object value =  marker;
+        protected Supplier<T> supplier;
+
+        private AbstractSupplier(Supplier<T> supplier) {
+            this.supplier = supplier;
+        }
+
+        @Override
+        abstract public T get();
+    }
+
+
+    private static class LazySupplier<T> extends AbstractSupplier<T> implements Lazy<T> {
 
         private LazySupplier(Supplier<T> supplier) {
-            this.supplier = supplier;
+            super(supplier);
         }
 
         @Override
@@ -32,13 +44,21 @@ public class LazyFactory {
         }
     }
 
-    private static class synchronizedLazySupplier<T> implements Lazy<T> {
+    private static class synchronizedLazySupplier<T> extends AbstractSupplier<T> implements Lazy<T> {
         private synchronizedLazySupplier(Supplier<T> supplier) {
+            super(supplier);
         }
 
         @Override
         public T get() {
-            return null;
+            if (value == marker) {
+                synchronized (this) {
+                    if (value == marker) {
+                        value = supplier.get();
+                    }
+                }
+            }
+            return (T)value;
         }
     }
 
