@@ -15,13 +15,20 @@ public class LazyFactory {
     }
 
     private static class LazySupplier<T> implements Lazy<T> {
-        private LazySupplier(Supplier<T> supplier) {
+        private static Object marker = new Object();
+        private Object value =  marker;
+        private Supplier<T> supplier;
 
+        private LazySupplier(Supplier<T> supplier) {
+            this.supplier = supplier;
         }
 
         @Override
         public T get() {
-            return null;
+            if (value == marker) {
+                value = supplier.get();
+            }
+            return (T)value;
         }
     }
 
