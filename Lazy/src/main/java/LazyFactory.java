@@ -1,6 +1,6 @@
 import java.util.function.Supplier;
 
-public class LazyFactory {
+public final class LazyFactory {
 
     public static <T> Lazy<T> createLazy(Supplier<T> supplier) {
         return new LazySupplier<>(supplier);
@@ -35,6 +35,7 @@ public class LazyFactory {
             super(supplier);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public T get() {
             if (value == marker) {
@@ -49,6 +50,7 @@ public class LazyFactory {
             super(supplier);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public T get() {
             if (value == marker) {
