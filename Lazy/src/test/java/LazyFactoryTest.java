@@ -7,6 +7,7 @@ import static junit.framework.TestCase.assertSame;
 
 
 public class LazyFactoryTest {
+
     private static final int NUMBER_OF_THREADS = 100;
 
     @Test
@@ -24,54 +25,54 @@ public class LazyFactoryTest {
     @Test
     public void createSynchronizedLazy_Check_uniqueness_of_get_invocation() throws Exception {
         final Counter counter = new Counter();
-        Lazy<Integer> lazy = LazyFactory.createSynchronizedLazy(() -> {
+        final Object obj = new Object();
+
+        Lazy<Object> lazy = LazyFactory.createSynchronizedLazy(() -> {
             counter.inc();
-            return 1;
+            return obj;
         });
-        assertEquals(new Integer(1), lazy.get());
-        assertEquals(new Integer(1), lazy.get());
+
+        assertSame(obj, lazy.get());
+        assertEquals(obj, lazy.get());
         assertEquals(1, counter.get());
     }
 
-
     @Test
     public void createSynchronizedLazy_simple_concurrent_test() throws Exception {
+        final Object obj = new Object();
         final Counter counter = new Counter();
-        Lazy<Integer> lazy = LazyFactory.createSynchronizedLazy(() -> {
+
+        Lazy<Object> lazy = LazyFactory.createSynchronizedLazy(() -> {
             counter.inc();
-            return 1;
+            return obj;
         });
 
         ArrayList<Thread> threads = new ArrayList<>();
-        Runnable task = lazy::get;
+        Runnable task = () -> assertSame(obj, lazy.get());
+
         for (int i = 0; i < NUMBER_OF_THREADS; i++) {
             Thread thread = new Thread(task);
-            thread.run();
+            thread.start();
             threads.add(thread);
         }
         for (Thread thread: threads) {
             thread.join();
         }
-        assertEquals(new Integer(1), lazy.get());
+
         assertEquals(1, counter.get());
     }
 
-
-
     @Test
     public void createLockFreeLazy_simple_concurrent_test() throws Exception {
-        final Counter counter = new Counter();
-        final Integer number = 10000;
-        Lazy<Integer> lazy = LazyFactory.createLockFreeLazy(() -> {
-            counter.inc();
-            return number;
-        });
+        final Object obj = new Object();
+        Lazy<Object> lazy = LazyFactory.createLockFreeLazy(() -> obj);
 
         ArrayList<Thread> threads = new ArrayList<>();
-        Runnable task = () -> assertSame(number, lazy.get());
+        Runnable task = () -> assertSame(obj, lazy.get());
+
         for (int i = 0; i < NUMBER_OF_THREADS; i++) {
             Thread thread = new Thread(task);
-            thread.run();
+            thread.start();
             threads.add(thread);
         }
         for (Thread thread: threads) {
