@@ -6,7 +6,6 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertSame;
 
 
-@SuppressWarnings("unused")
 public class LazyFactoryTest {
 
     private static final int NUMBER_OF_THREADS = 100;
