@@ -6,6 +6,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertSame;
 
 
+@SuppressWarnings("unused")
 public class LazyFactoryTest {
 
     private static final int NUMBER_OF_THREADS = 100;
@@ -78,6 +79,27 @@ public class LazyFactoryTest {
         for (Thread thread: threads) {
             thread.join();
         }
+    }
+
+    @Test
+    public void createLazy_null_test() throws Exception {
+        Lazy<Object> lazy = LazyFactory.createLazy(() -> null);
+        assertEquals(null, lazy.get());
+        assertEquals(null, lazy.get());
+    }
+
+    @Test
+    public void createSynchronizedLazy_null_test() throws Exception {
+        Lazy<Object> lazy = LazyFactory.createSynchronizedLazy(() -> null);
+        assertEquals(null, lazy.get());
+        assertEquals(null, lazy.get());
+    }
+
+    @Test
+    public void createLockFreeLazy_null_test() throws Exception {
+        Lazy<Object> lazy = LazyFactory.createLockFreeLazy(() -> null);
+        assertEquals(null, lazy.get());
+        assertEquals(null, lazy.get());
     }
 
 
