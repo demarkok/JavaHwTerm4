@@ -1,3 +1,6 @@
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
+
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.Supplier;
 
@@ -13,6 +16,7 @@ public final class LazyFactory {
      * @param <T> the type of supplied value
      * @return non-concurrent lazy supplier
      */
+    @NotNull
     public static <T> Lazy<T> createLazy(Supplier<T> supplier) {
         return new LazySupplier<>(supplier);
     }
@@ -24,6 +28,7 @@ public final class LazyFactory {
      * @param <T> the type of supplied value
      * @return concurrent version of lazy supplier
      */
+    @NotNull
     public static <T> Lazy<T> createSynchronizedLazy(Supplier<T> supplier) {
         return new SynchronizedLazySupplier<>(supplier);
     }
@@ -35,6 +40,7 @@ public final class LazyFactory {
      * @param <T> the type of supplied value
      * @return lock free concurrent version of lazy supplier
      */
+    @NotNull
     public static <T> Lazy<T> createLockFreeLazy(Supplier<T> supplier) {
         return new LockFreeLazySupplier<>(supplier);
     }
@@ -46,15 +52,16 @@ public final class LazyFactory {
      * @param <T> the type of supplied value
      */
     private static abstract class AbstractSupplier<T> implements Lazy<T> {
-        protected static Object marker = new Object();
+        protected static final Object marker = new Object();
         volatile protected Object value =  marker;
-        protected Supplier<T> supplier;
+        protected final Supplier<T> supplier;
 
         private AbstractSupplier(Supplier<T> supplier) {
             this.supplier = supplier;
         }
 
         @Override
+        @Nullable
         abstract public T get();
     }
 
@@ -78,6 +85,7 @@ public final class LazyFactory {
          */
         @SuppressWarnings("unchecked")
         @Override
+        @Nullable
         public T get() {
             if (value == marker) {
                 value = supplier.get();
@@ -108,6 +116,7 @@ public final class LazyFactory {
          */
         @SuppressWarnings("unchecked")
         @Override
+        @Nullable
         public T get() {
             if (value == marker) {
                 synchronized (this) {
@@ -138,6 +147,7 @@ public final class LazyFactory {
 
         @SuppressWarnings("unchecked")
         @Override
+        @Nullable
         public T get() {
 
             if (value == marker) {
