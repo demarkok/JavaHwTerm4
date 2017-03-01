@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 public final class LazyFactory {
 
     /**
-     * Generate non-concurrent lazy supplier
+     * Generates non-concurrent lazy supplier.
      *
      * @param supplier held supplier
      * @param <T> the type of supplied value
@@ -18,7 +18,7 @@ public final class LazyFactory {
     }
 
     /**
-     * Generate concurrent version of lazy supplier
+     * Generates concurrent version of lazy supplier.
      *
      * @param supplier held supplier
      * @param <T> the type of supplied value
@@ -29,7 +29,7 @@ public final class LazyFactory {
     }
 
     /**
-     * Generate lock free concurrent version of lazy supplier
+     * Generates lock free concurrent version of lazy supplier.
      *
      * @param supplier held supplier
      * @param <T> the type of supplied value
@@ -60,7 +60,7 @@ public final class LazyFactory {
 
 
     /**
-     * Class represents simple, non-concurrent lazy supplier.
+     * Class representing simple, non-concurrent lazy supplier.
      *
      * @param <T> the type of supplied value
      */
@@ -87,7 +87,9 @@ public final class LazyFactory {
     }
 
     /**
-     * Class represents
+     * Class representing a concurrent version of lazy supplier.
+     * It is guaranteed that {@code supplier.get()} will be invoked once.
+     *
      *
      * @param <T> the type of supplied value
      */
@@ -98,7 +100,7 @@ public final class LazyFactory {
 
 
         /**
-         * In the first invocation uses {@code supplier.get()} to get supplied value and saves it in field {@value}.
+         * In the first invocation uses {@link #supplier#get()} to get supplied value and saves it in field {@value}.
          * In further invocations returns saved value.
          * Uses double-checked locking to provide concurrent behaviour.
          *
@@ -118,6 +120,13 @@ public final class LazyFactory {
         }
     }
 
+    /**
+     * Class representing a concurrent lock-free version of lazy supplier.
+     * It isn't guaranteed that {@link #supplier#get()} will be invoked once.
+     * But every {@link #get()} invocation returns the same object.
+     *
+     * @param <T> the type of supplied value
+     */
     private static class LockFreeLazySupplier<T> extends AbstractSupplier<T> implements Lazy<T> {
 
         private static final AtomicReferenceFieldUpdater <AbstractSupplier, Object> updater =
