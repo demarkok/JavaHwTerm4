@@ -23,7 +23,7 @@ public class LazyFactoryTest {
     @Test
     public void createSynchronizedLazy() throws Exception {
         final Counter counter = new Counter();
-        Lazy<Integer> lazy = LazyFactory.createLazy(() -> {
+        Lazy<Integer> lazy = LazyFactory.createSynchronizedLazy(() -> {
             counter.inc();
             return 1;
         });
