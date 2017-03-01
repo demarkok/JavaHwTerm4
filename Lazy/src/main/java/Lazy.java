@@ -5,5 +5,6 @@
  * @param <T> supplied type
  */
 public interface Lazy <T> {
+
     T get();
 }
