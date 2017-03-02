@@ -6,4 +6,6 @@ jdk:
 env:
   - PROJECT_DIR=Lazy
 
-before_install: cd $PROJECT_DIR
+before_install: 
+  cd $PROJECT_DIR
+  chmod +x gradlew
