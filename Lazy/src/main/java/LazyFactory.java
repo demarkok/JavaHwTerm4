@@ -47,15 +47,14 @@ public final class LazyFactory {
         return new LockFreeLazySupplier<>(supplier);
     }
 
-
     /**
      * Abstract class which represents a common part for all lazy suppliers.
      *
      * @param <T> the type of supplied value
      */
     private static abstract class AbstractSupplier<T> implements Lazy<T> {
-        protected static final Object marker = new Object();
-        volatile protected Object value =  marker;
+        protected static final Object EMPTY = new Object();
+        protected volatile Object value = EMPTY;
         protected final Supplier<T> supplier;
 
         private AbstractSupplier(Supplier<T> supplier) {
@@ -89,7 +88,7 @@ public final class LazyFactory {
         @Override
         @Nullable
         public T get() {
-            if (value == marker) {
+            if (value == EMPTY) {
                 value = supplier.get();
             }
             return (T)value;
@@ -99,7 +98,6 @@ public final class LazyFactory {
     /**
      * Class representing a concurrent version of lazy supplier.
      * It is guaranteed that {@code supplier.get()} will be invoked once.
-     *
      *
      * @param <T> the type of supplied value
      */
@@ -120,9 +118,9 @@ public final class LazyFactory {
         @Override
         @Nullable
         public T get() {
-            if (value == marker) {
+            if (value == EMPTY) {
                 synchronized (this) {
-                    if (value == marker) {
+                    if (value == EMPTY) {
                         value = supplier.get();
                     }
                 }
@@ -152,8 +150,8 @@ public final class LazyFactory {
         @Nullable
         public T get() {
 
-            if (value == marker) {
-                updater.compareAndSet(this, marker, supplier.get());
+            if (value == EMPTY) {
+                updater.compareAndSet(this, EMPTY, supplier.get());
             }
 
             return (T)value;
