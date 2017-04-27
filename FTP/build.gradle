@@ -5,25 +5,50 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.8
 
-version = '1.0'
-
-task createClientJAR(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'ftpClient',
-                'Implementation-Version': version,
-                'Main-Class': 'ClientCLI'
-    }
-    baseName = project.name + '-application'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    testCompile group: 'com.google.guava', name: 'guava', version: 'r05'
+
+
+    // https://mvnrepository.com/artifact/com.googlecode.clichemaven/cliche
+    compile group: 'com.googlecode.clichemaven', name: 'cliche', version: '110413'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+
+    compile group: 'org.jetbrains', name: 'annotations', version: '13.0'
 }
 
+task serverJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'ftpServer',
+                'Implementation-Version': version,
+                'Main-Class': 'CLI.server.ServerShell'
+    }
+    baseName = 'FTPServer'
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 
+    with jar
+}
+
+task clientJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'ftpClient',
+                'Implementation-Version': version,
+                'Main-Class': 'CLI.client.ClientShell'
+    }
+    baseName = 'FTPClient'
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    with jar
+}
