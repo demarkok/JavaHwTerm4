@@ -9,6 +9,7 @@ import core.client.Client;
 import core.client.ClientInterface;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.channels.NotYetConnectedException;
 import java.nio.file.NotDirectoryException;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -61,6 +62,8 @@ public class ClientShell implements ShellManageable {
             return error("Not a directory.");
         } catch (FileNotFoundException e) {
             return error("No such directory.");
+        } catch (NotYetConnectedException e) {
+            return error("Not connected.");
         } catch (IOException e) {
             e.printStackTrace();
             return error("IO Error.\n");
@@ -78,6 +81,8 @@ public class ClientShell implements ShellManageable {
             client.executeGet(pathSrc, pathDst);
         } catch (FileNotFoundException e) {
             return error("No such file.");
+        } catch (NotYetConnectedException e) {
+            return error("Not connected.");
         } catch (IOException e) {
             e.printStackTrace();
             return error("IO Error.");

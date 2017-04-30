@@ -1,5 +1,6 @@
 package core;
 
+import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -36,6 +37,8 @@ public class CommonTest {
     private final UncaughtExceptionHandler handler = new UncaughtExceptionHandler() {
         @Override
         public void uncaughtException(Thread t, Throwable e) {
+            System.out.println("hello!");
+            e.printStackTrace();
             fail();
         }
     };
@@ -49,15 +52,22 @@ public class CommonTest {
         server.stop();
     }
 
-    @Test(expected = ServerAlreadyStartedException.class)
+//    @Test(expected = ServerAlreadyStartedException.class)
+    @Test
     public void startStartServerTest() throws ServerAlreadyStartedException {
         ServerInterface server = new Server();
         server.start(handler);
-        server.start(handler);
+        try {
+            server.start(handler);
+            fail("ServerAlreadyStarted exception expected");
+        } catch (ServerAlreadyStartedException e) {
+            server.stop();
+        }
     }
 
     @Test
-    public void connectDisconnectTest() throws ServerAlreadyStartedException, IOException {
+    public void connectDisconnectTest()
+        throws ServerAlreadyStartedException, IOException, InterruptedException {
         ServerInterface server = new Server();
         ClientInterface client = new Client();
         server.start(handler);
@@ -65,6 +75,8 @@ public class CommonTest {
         client.disconnect();
         assertTrue(client.connect("localhost"));
         client.disconnect();
+        sleep(200);
+        server.stop();
     }
 
     @Test(expected = NotYetConnectedException.class)
@@ -75,10 +87,12 @@ public class CommonTest {
         assertTrue(client.connect("localhost"));
         client.disconnect();
         client.disconnect();
+        server.stop();
     }
 
     @Test
-    public void listListTest() throws ServerAlreadyStartedException, IOException {
+    public void listListTest()
+        throws ServerAlreadyStartedException, IOException, InterruptedException {
         ServerInterface server = new Server();
         ClientInterface client = new Client();
         server.start(handler);
@@ -91,6 +105,7 @@ public class CommonTest {
         result = client.executeList(serverFolder.getRoot().getPath());
         assertEquals(new HashSet<String>(result),
             ImmutableSet.of(file.getName(), folder.getName() + "/"));
+        server.stop();
     }
 
     @Test
@@ -110,7 +125,9 @@ public class CommonTest {
         client.executeGet(inputFile.getAbsolutePath(), outputFile.getAbsolutePath());
         byte[] result = Files.readAllBytes(outputFile.toPath());
         assertArrayEquals(data, result);
+        server.stop();
     }
+
 
     @Test
     public void multipleClientListTest()
@@ -147,6 +164,7 @@ public class CommonTest {
         for (int i = 0; i < n; i++) {
             threads.get(i).join();
         }
+        server.stop();
     }
 
 
@@ -193,5 +211,7 @@ public class CommonTest {
         for (int i = 0; i < n; i++) {
             threads.get(i).join();
         }
+        server.stop();
     }
+
 }

@@ -70,10 +70,11 @@ public class Client implements ClientInterface {
     @NotNull
     @Override
     public List<String> executeList(@NotNull String path) throws IOException {
-        if (connection == null) {
+        if (!isConnectionValid()) {
             throw new NotYetConnectedException();
         }
         processor.formListQuery(path);
+        assert connection != null;
         connection.write();
         connection.read();
         if (processor.lastListResponse == null) {
@@ -90,10 +91,11 @@ public class Client implements ClientInterface {
      */
     @Override
     public void executeGet(@NotNull String pathSrc, @NotNull String pathDst) throws IOException {
-        if (connection == null) {
+        if (!isConnectionValid()) {
             throw new NotYetConnectedException();
         }
         processor.formGetQuery(pathSrc, pathDst);
+        assert connection != null;
         connection.write();
 
         do {
@@ -154,5 +156,9 @@ public class Client implements ClientInterface {
             query = new GetQuery(pathSrc);
             fileStream = new FileOutputStream(pathDst);
         }
+    }
+
+    private boolean isConnectionValid() {
+        return connection != null && channel != null && channel.isOpen() && channel.isConnected();
     }
 }

@@ -25,6 +25,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.file.NotDirectoryException;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,6 +40,8 @@ public class Server implements ServerInterface {
     private static final int FILE_PIECE_SIZE = 2048;
     private static final int PORT = 23923;
     private volatile boolean running;
+    private Thread workingThread;
+    private final List<SocketChannel> channelsToClose = new LinkedList<>();
 
     /**
      * {@inheritDoc}
@@ -46,7 +49,21 @@ public class Server implements ServerInterface {
      */
     @Override
     public void stop() {
+        if (!running) {
+            return;
+        }
         running = false;
+
+        try {
+            workingThread.join(1000);
+            if (workingThread.isAlive()) {
+                workingThread.interrupt();
+            }
+            workingThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -58,22 +75,23 @@ public class Server implements ServerInterface {
             throw new ServerAlreadyStartedException();
         }
         running = true;
-        Thread thread = new Thread(this::go);
-        thread.setUncaughtExceptionHandler(exceptionHandler);
-        new Thread(this::go).start();
+        workingThread = new Thread(this::go);
+        workingThread.setUncaughtExceptionHandler(exceptionHandler);
+        workingThread.start();
     }
 
     private void go() {
         try(Selector selector = Selector.open();
             ServerSocketChannel acquaintanceChannel = ServerSocketChannel.open()){
 
-            acquaintanceChannel.bind(new InetSocketAddress(PORT));
             acquaintanceChannel.configureBlocking(false);
+            acquaintanceChannel.bind(new InetSocketAddress(PORT));
 
             acquaintanceChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             while (running) {
                 selector.select();
+
 
                 Set<SelectionKey> selectedKeys = selector.selectedKeys();
                 Iterator it = selectedKeys.iterator();
@@ -85,6 +103,8 @@ public class Server implements ServerInterface {
                         ServerSocketChannel gotAcquaintanceChannel = (ServerSocketChannel) key.channel();
                         SocketChannel connectionChannel = gotAcquaintanceChannel.accept();
                         connectionChannel.configureBlocking(false);
+
+                        channelsToClose.add(connectionChannel);
 
                         SelectionKey newKey = connectionChannel.register(selector,
                             SelectionKey.OP_READ);
@@ -192,6 +212,9 @@ public class Server implements ServerInterface {
                     }
                     it.remove();
                 }
+            }
+            for (SocketChannel channel: channelsToClose) {
+                channel.close();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

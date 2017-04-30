@@ -51,7 +51,7 @@ public class ServerShell {
 
     /**
      * Runs the shell.
-     * {@param args} is expected to be empty.
+     * @param args is expected to be empty.
      */
     public static void main(String[] args) {
         server = new Server();
