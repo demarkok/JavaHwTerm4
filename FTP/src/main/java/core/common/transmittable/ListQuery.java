@@ -17,7 +17,8 @@ public class ListQuery implements FTPPackage {
     }
 
     /**
-     * Creates the request of files and folders contained on the server in {@param path}
+     * Creates the request of files and folders contained on the server in {@code path}
+     * @param path - absolute path contained in the request.
      */
     public ListQuery(@NotNull String path) {
         this.path = path;

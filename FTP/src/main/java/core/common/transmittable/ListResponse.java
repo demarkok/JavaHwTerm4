@@ -15,8 +15,10 @@ public class ListResponse implements FTPPackage {
     private final List<String> files;
 
     /**
-     * Creates the List response with {@param directories} as directories list and
-     * {@param files} as files list.
+     * Creates the List response with {@code directories} as directories list and
+     * {@code files} as files list.
+     * @param directories - list of names of directories
+     * @param files - list of names of files
      */
     public ListResponse(@NotNull List<String> directories, @NotNull List<String> files) {
         this.directories = directories;

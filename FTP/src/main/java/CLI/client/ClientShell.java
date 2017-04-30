@@ -33,7 +33,8 @@ public class ClientShell implements ShellManageable {
     private static boolean connected;
 
     /**
-     * Connects to the server hosted on {@param ip}.
+     * Connects to the server hosted on {@code ip}.
+     * @param ip - host address
      * @return message representing the result of connection.
      */
     @NotNull
@@ -49,7 +50,8 @@ public class ClientShell implements ShellManageable {
     }
 
     /**
-     * Executes the list query: show files and directories placed in {@param path}.
+     * Executes the list query: show files and directories placed in {@code path}.
+     * @param path - absolute path on server
      * @return message representing the result.
      */
     @NotNull
@@ -71,7 +73,9 @@ public class ClientShell implements ShellManageable {
     }
 
     /**
-     * Executes the get query: download the file placed on server in {@param path}.
+     * Executes the get query: download the file placed on server in {@code pathSrc}.
+     * @param pathSrc - absolute file path on server
+     * @param pathDst - absolute file path on client
      * @return message representing the result.
      */
     @NotNull
@@ -111,7 +115,7 @@ public class ClientShell implements ShellManageable {
 
     /**
      * Runs the shell.
-     * {@param args} is expected to be empty.
+     * @param args is expected to be empty.
      */
     public static void main(String[] args) {
         client = new Client();

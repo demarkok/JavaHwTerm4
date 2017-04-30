@@ -28,8 +28,10 @@ public class GetResponseHeader implements FTPPackage {
     }
 
     /**
-     * Creates the response with {@param filePath} as path of asked file and
-     * {@param fileSize} as length of asked file.
+     * Creates the response with {@code filePath} as path of asked file and
+     * {@code fileSize} as length of asked file.
+     * @param filePath - absolute path of asked file
+     * @param fileSize - length of asked file
      */
     public GetResponseHeader(@NotNull String filePath, long fileSize) {
         this.filePath = filePath;

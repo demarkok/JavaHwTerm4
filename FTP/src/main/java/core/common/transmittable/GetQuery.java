@@ -16,7 +16,8 @@ public class GetQuery implements FTPPackage {
     }
 
     /**
-     * Creates the request of file contained on the server in {@param path}
+     * Creates the request of file contained on the server in {@code path}
+     * @param path absolute file path on server
      */
     public GetQuery(@NotNull String path) {
         this.path = path;

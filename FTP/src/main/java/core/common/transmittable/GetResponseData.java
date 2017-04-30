@@ -11,7 +11,8 @@ public class GetResponseData implements FTPPackage {
     private final byte[] data;
 
     /**
-     * Creates the response with {@param data} as chunk of file.
+     * Creates the response with {@code data} as chunk of file.
+     * @param data - contained file chunk
      */
     public GetResponseData(@NotNull byte[] data) {
         this.data = data;
