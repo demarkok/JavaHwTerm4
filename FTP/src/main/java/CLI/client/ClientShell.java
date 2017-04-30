@@ -10,8 +10,12 @@ import core.client.ClientInterface;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.channels.NotYetConnectedException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.NotDirectoryException;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +33,6 @@ public class ClientShell implements ShellManageable {
         + "    get [src] [dst] - download the file\n"
         + "    exit";
     private static ClientInterface client;
-
     private static boolean connected;
 
     /**
@@ -39,7 +42,7 @@ public class ClientShell implements ShellManageable {
      */
     @NotNull
     @Command(description = "connect to ftp server")
-    public String connect(@Param(name = "ip", description = "address of server") @NotNull String ip) {
+    public String connect(@Param(name = "ip", description = "server address") @NotNull String ip) {
 
         if (client.connect(ip)) {
             connected = true;
@@ -58,14 +61,28 @@ public class ClientShell implements ShellManageable {
     @Command
     public String list(@NotNull String path) {
         try {
-            List<String> result =  client.executeList(path);
-            return StringUtils.join(result, "\n");
+            Map<String, Boolean> result = client.executeList(path);
+
+            List<String> files = result.entrySet().stream()
+                .filter(x -> !x.getValue())
+                .map(Entry::getKey)
+                .collect(Collectors.toList());
+
+            List<String> directories = result.entrySet().stream()
+                .filter(Entry::getValue)
+                .map(Entry::getKey)
+                .map(x -> x + "/")
+                .collect(Collectors.toList());
+
+            return StringUtils.join(files, "\n") + StringUtils.join(directories,"\n");
         } catch (NotDirectoryException e) {
             return error("Not a directory.");
         } catch (FileNotFoundException e) {
             return error("No such directory.");
         } catch (NotYetConnectedException e) {
             return error("Not connected.");
+        } catch (AccessDeniedException e) {
+            return error("Access denied.");
         } catch (IOException e) {
             e.printStackTrace();
             return error("IO Error.\n");
@@ -80,13 +97,16 @@ public class ClientShell implements ShellManageable {
      */
     @NotNull
     @Command
-    public String get(@NotNull String pathSrc, @NotNull String pathDst) {
+    public String get(@Param(name = "source") @NotNull String pathSrc,
+            @Param(name = "destination") @NotNull String pathDst) {
         try {
             client.executeGet(pathSrc, pathDst);
         } catch (FileNotFoundException e) {
             return error("No such file.");
         } catch (NotYetConnectedException e) {
             return error("Not connected.");
+        } catch (AccessDeniedException e) {
+            return error("Access denied.");
         } catch (IOException e) {
             e.printStackTrace();
             return error("IO Error.");
@@ -98,6 +118,7 @@ public class ClientShell implements ShellManageable {
      * Tries to disconnect from server.
      * @return message representing the result.
      */
+    @SuppressWarnings("UnusedReturnValue")
     @NotNull
     @Command
     public String disconnect(){

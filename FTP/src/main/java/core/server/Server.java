@@ -22,7 +22,10 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.NotDirectoryException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,6 +45,7 @@ public class Server implements ServerInterface {
     private volatile boolean running;
     private Thread workingThread;
     private final List<SocketChannel> channelsToClose = new LinkedList<>();
+    private Path rootPath;
 
     /**
      * {@inheritDoc}
@@ -70,7 +74,9 @@ public class Server implements ServerInterface {
      * {@inheritDoc}
      */
     @Override
-    public void start(@NotNull UncaughtExceptionHandler exceptionHandler) throws ServerAlreadyStartedException {
+    public void start(@NotNull UncaughtExceptionHandler exceptionHandler, @NotNull String rootPath)
+            throws ServerAlreadyStartedException {
+        this.rootPath = Paths.get(rootPath);
         if (running) {
             throw new ServerAlreadyStartedException();
         }
@@ -121,12 +127,16 @@ public class Server implements ServerInterface {
                             @Override
                             public void process(@NotNull FTPPackage ftpPackage) {
                                 if (ftpPackage instanceof ListQuery) {
-                                    File directory = new File(((ListQuery) ftpPackage).getPath());
+                                    String pathString = ((ListQuery) ftpPackage).getPath();
+                                    File directory = rootPath.resolve(pathString).toFile();
 
-                                    if (!directory.exists()) {
-                                        response = new ErrorResponse(new FileNotFoundException(directory.getPath()));
+                                    if (!isInSubDirectory(rootPath.toAbsolutePath().normalize(),
+                                        directory.toPath().toAbsolutePath().normalize())) {
+                                        response = new ErrorResponse(new AccessDeniedException(pathString));
+                                    } else if (!directory.exists()) {
+                                        response = new ErrorResponse(new FileNotFoundException(pathString));
                                     } else if (!directory.isDirectory()) {
-                                        response = new ErrorResponse(new NotDirectoryException(directory.getPath()));
+                                        response = new ErrorResponse(new NotDirectoryException(pathString));
                                     } else {
                                         File[] directoriesArray = directory.listFiles(File::isDirectory);
                                         File[] filesArray = directory.listFiles(File::isFile);
@@ -140,13 +150,22 @@ public class Server implements ServerInterface {
                                         response = new ListResponse(directories, files);
                                     }
                                 } else if (ftpPackage instanceof GetQuery) {
-                                    try {
-                                        beginFileSending(
-                                            new File(((GetQuery) ftpPackage).getPath()));
-                                    } catch (FileNotFoundException e) {
-                                        response = new ErrorResponse(e);
-                                        fileSendingMode = false;
+                                    String pathString = ((GetQuery) ftpPackage).getPath();
+                                    File file = rootPath.resolve(pathString).toFile();
+                                    if (!isInSubDirectory(rootPath.toAbsolutePath().normalize(),
+                                        file.toPath().toAbsolutePath().normalize())) {
+                                        response = new ErrorResponse(new AccessDeniedException(pathString));
+                                    } else if (!file.exists() || !file.isFile()) {
+                                        response = new ErrorResponse(new FileNotFoundException(pathString));
+                                    } else {
+                                        try {
+                                            beginFileSending(file);
+                                        } catch (FileNotFoundException e) {
+                                            response = new ErrorResponse(e);
+                                            fileSendingMode = false;
+                                        }
                                     }
+
                                 } else {
                                     throw new RuntimeException("Unable to recognize the query");
                                 }
@@ -203,6 +222,11 @@ public class Server implements ServerInterface {
                                 fileSendingMode = false;
                                 fileChannel.close();
                                 newKey.interestOps(SelectionKey.OP_READ);
+                            }
+
+                            private boolean isInSubDirectory(@NotNull Path directory, @Nullable Path file) {
+                                return file != null && (directory.equals(file) ||
+                                    isInSubDirectory(directory, file.getParent()));
                             }
                         }, connectionChannel));
                     } else if ((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) {

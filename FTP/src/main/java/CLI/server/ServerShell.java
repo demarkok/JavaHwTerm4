@@ -1,6 +1,7 @@
 package CLI.server;
 
 import asg.cliche.Command;
+import asg.cliche.Param;
 import asg.cliche.Shell;
 import asg.cliche.ShellFactory;
 import core.common.exceptions.ServerAlreadyStartedException;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class ServerShell {
 
     private static final String COMMANDS_MESSAGE = "usage:\n"
-        + "    start - start ftp server\n"
+        + "    start [rootPath] - start ftp server in rootPath\n"
         + "    stop - stop ftp server\n"
         + "    exit";
     private static final String PROMPT = "ftp-srv";
@@ -29,9 +30,10 @@ public class ServerShell {
      */
     @NotNull
     @Command(description = "start ftp server")
-    public String start() {
+    public String start(@Param(name = "rootPath", description = "client has got access only to"
+            + " subdirectories of rootPath") String rootPath) {
         try {
-            server.start((t, e) -> e.printStackTrace());
+            server.start((t, e) -> e.printStackTrace(), rootPath);
         } catch (ServerAlreadyStartedException e) {
             return error("Server has already started.");
         }

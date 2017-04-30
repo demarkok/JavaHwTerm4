@@ -15,8 +15,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.NotYetConnectedException;
 import java.nio.channels.SocketChannel;
-import java.util.LinkedList;
-import java.util.List;
+import java.nio.channels.UnresolvedAddressException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +47,7 @@ public class Client implements ClientInterface {
             connection = new Connection(processor, channel);
             return channel.connect(new InetSocketAddress(ip, PORT));
 
-        } catch (IOException e) {
+        } catch (IOException | UnresolvedAddressException e) {
             return false;
         }
     }
@@ -69,7 +70,7 @@ public class Client implements ClientInterface {
      */
     @NotNull
     @Override
-    public List<String> executeList(@NotNull String path) throws IOException {
+    public Map<String, Boolean> executeList(@NotNull String path) throws IOException {
         if (!isConnectionValid()) {
             throw new NotYetConnectedException();
         }
@@ -77,12 +78,13 @@ public class Client implements ClientInterface {
         assert connection != null;
         connection.write();
         connection.read();
-        if (processor.lastListResponse == null) {
-            return new LinkedList<>();
+        HashMap<String,Boolean> result = new HashMap<>();
+        if (processor.lastListResponse != null) {
+            result.putAll(processor.lastListResponse.getDirectories().stream()
+                .collect(Collectors.toMap(x -> x, x -> true)));
+            result.putAll(processor.lastListResponse.getFiles().stream()
+                .collect(Collectors.toMap(x -> x, x -> false)));
         }
-        List<String> result = processor.lastListResponse.getDirectories();
-        result = result.stream().map(s -> s + "/").collect(Collectors.toList());
-        result.addAll(processor.lastListResponse.getFiles());
         return result;
     }
 
@@ -114,6 +116,7 @@ public class Client implements ClientInterface {
         private long expectedSize;
         private long actualSize;
         private FileOutputStream fileStream;
+        private String filePath;
         private boolean fileReadingMode;
 
         @Override
@@ -123,6 +126,7 @@ public class Client implements ClientInterface {
             } else if (ftpPackage instanceof GetResponseHeader) {
                 expectedSize = ((GetResponseHeader) ftpPackage).getFileSize();
                 fileReadingMode = true;
+                fileStream = new FileOutputStream(filePath);
                 actualSize = 0;
             } else if (ftpPackage instanceof GetResponseData) {
                 byte[] buffer = ((GetResponseData) ftpPackage).getData();
@@ -154,7 +158,7 @@ public class Client implements ClientInterface {
 
         private void formGetQuery(@NotNull String pathSrc, @NotNull String pathDst) throws FileNotFoundException {
             query = new GetQuery(pathSrc);
-            fileStream = new FileOutputStream(pathDst);
+            filePath = pathDst;
         }
     }
 

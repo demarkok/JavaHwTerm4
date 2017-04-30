@@ -1,7 +1,7 @@
 package core.client;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,11 +25,12 @@ public interface ClientInterface {
     /**
      * Executes the list query.
      * @param path - absolute directory path.
-     * @return list of files and directories placed in the directory.
+     * @return map containing names of files and directories as keys and
+     * booleans as values, where true means directory, false means file.
      * throws IOException
      */
     @NotNull
-    List<String> executeList(@NotNull String path) throws IOException;
+    Map<String, Boolean> executeList(@NotNull String path) throws IOException;
 
     /**
      * Executes the get query. Downloads file from server to client.
