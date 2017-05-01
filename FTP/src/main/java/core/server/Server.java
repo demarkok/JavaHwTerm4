@@ -140,8 +140,11 @@ public class Server implements ServerInterface {
                                     } else {
                                         File[] directoriesArray = directory.listFiles(File::isDirectory);
                                         File[] filesArray = directory.listFiles(File::isFile);
-                                        if (directoriesArray == null || filesArray == null) {
-                                            throw new RuntimeException();
+                                        if (directoriesArray == null) {
+                                            directoriesArray = new File[0];
+                                        }
+                                        if (filesArray == null) {
+                                            filesArray = new File[0];
                                         }
                                         List<String> directories = Arrays.stream(directoriesArray)
                                             .map(File::getName).collect(Collectors.toList());
