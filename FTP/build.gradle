@@ -52,3 +52,18 @@ task clientJar(type: Jar) {
 
     with jar
 }
+
+
+task clientGUIJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'ftpClientGUI',
+                'Implementation-Version': version,
+                'Main-Class': 'GUI.client.Main'
+    }
+    baseName = 'FTPClientGUI'
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    with jar
+}
