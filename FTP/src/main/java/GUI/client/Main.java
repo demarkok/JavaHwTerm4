@@ -98,7 +98,6 @@ public class Main extends Application{
         connectButton.setOnAction(event -> {
             if (connectButton.isSelected()) {
                 if (client.connect(addressField.getText())) {
-                    System.out.println("ok");
                     addressField.setText("connected to " + addressField.getText());
                     addressField.setAlignment(Pos.BASELINE_CENTER);
                     addressField.setDisable(true);
