@@ -87,10 +87,42 @@ public class MainTest {
         Tester tester = new Tester(classToTest);
         List<TestResult> result = tester.test();
 
-        System.out.println(result);
 
         assertThat(result, contains(
             noExpectedExceptionFailureResult(ClassWithTestNotThrowingExpectedException.EXPECTED_EXCEPTION_CLASS)));
+    }
+
+    @Test
+    public void beforeAndAfterTest()
+        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {
+        Class classToTest = Class.forName(
+            "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithBeforeAndAfter");
+
+        Tester tester = new Tester(classToTest);
+        List<TestResult> result = tester.test();
+
+        assertThat(result, containsInAnyOrder(successfulResult(), successfulResult()));
+    }
+
+    @Test(expected = ExceptionInAfterClassException.class)
+    public void exceptionFromAfterClassTest()
+        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {Class classToTest = Class.forName(
+        "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithExceptionInAfterClass");
+
+        Tester tester = new Tester(classToTest);
+        tester.test();
+    }
+
+    @Test
+    public void beforeClassAndAfterClassTest()
+        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {
+        Class classToTest = Class.forName(
+            "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithBeforeClass");
+
+        Tester tester = new Tester(classToTest);
+        List<TestResult> result = tester.test();
+
+        assertThat(result, containsInAnyOrder(successfulResult(), successfulResult()));
     }
 
 
