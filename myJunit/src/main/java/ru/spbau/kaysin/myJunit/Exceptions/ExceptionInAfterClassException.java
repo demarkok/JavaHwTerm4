@@ -1,7 +1,7 @@
 package ru.spbau.kaysin.myJunit.Exceptions;
 
 /**
- * Created by demarkok on 13-May-17.
+ * Thrown if an exception was thrown during running method annotated {@link ru.spbau.kaysin.myJunit.Annotations.AfterClass}.
  */
 public class ExceptionInAfterClassException extends Exception {
 

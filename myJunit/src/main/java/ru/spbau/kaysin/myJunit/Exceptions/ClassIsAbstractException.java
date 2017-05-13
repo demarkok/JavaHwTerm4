@@ -1,7 +1,7 @@
 package ru.spbau.kaysin.myJunit.Exceptions;
 
 /**
- * Created by demarkok on 04-May-17.
+ * Can't instantiate the class due to it's abstract.
  */
 public class ClassIsAbstractException extends ReflectiveOperationException {
 

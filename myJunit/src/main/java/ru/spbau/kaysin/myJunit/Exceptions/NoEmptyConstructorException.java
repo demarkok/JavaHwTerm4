@@ -1,7 +1,7 @@
 package ru.spbau.kaysin.myJunit.Exceptions;
 
 /**
- * Created by demarkok on 04-May-17.
+ * Can't instantiate class due to the lack of the empty constructor.
  */
 public class NoEmptyConstructorException extends ReflectiveOperationException {
 
