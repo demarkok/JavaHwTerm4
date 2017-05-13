@@ -1,6 +1,7 @@
 package ru.spbau.kaysin.myJunit.testResults;
 
 import java.lang.reflect.Method;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The test result describing the case when the test method threw an exception, but no exception was expected or
@@ -8,6 +9,7 @@ import java.lang.reflect.Method;
  */
 public class UnexpectedExceptionFailureResult extends BaseTestResult {
 
+    @NotNull
     private final Class <? extends Throwable> thrownException;
 
     /**
@@ -17,8 +19,8 @@ public class UnexpectedExceptionFailureResult extends BaseTestResult {
      * @param time testing time in mils.
      * @param thrownException - the unexpected but thrown exception.
      */
-    public UnexpectedExceptionFailureResult(Class testedClass, Method testedMethod, long time,
-        Class<? extends Throwable> thrownException) {
+    public UnexpectedExceptionFailureResult(@NotNull Class testedClass, @NotNull Method testedMethod, long time,
+        @NotNull Class<? extends Throwable> thrownException) {
         super(testedClass, testedMethod, time);
         this.thrownException = thrownException;
     }
@@ -38,6 +40,7 @@ public class UnexpectedExceptionFailureResult extends BaseTestResult {
      * Returns the contained exception (unexpected but thrown).
      * @return the contained exception (unexpected but thrown).
      */
+    @NotNull
     public Class<? extends Throwable> getThrownException() {
         return thrownException;
     }

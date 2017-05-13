@@ -10,7 +10,7 @@ import ru.spbau.kaysin.myJunit.Annotations.MyTest;
  */
 public class ClassWithBeforeClass {
 
-    private int x = 0;
+    private int x;
 
     @BeforeClass
     public void beforeClass() {

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 import ru.spbau.kaysin.myJunit.Annotations.After;
 import ru.spbau.kaysin.myJunit.Annotations.AfterClass;
 import ru.spbau.kaysin.myJunit.Annotations.Before;
@@ -31,13 +32,13 @@ import ru.spbau.kaysin.myJunit.testResults.UnexpectedExceptionFailureResult;
  */
 public class Tester {
 
-    private final Class<?> testClass;
-    private final Object instance;
-    private final Map<Method, MyTest> testCaseMethods;
-    private final List<Method> beforeMethods;
-    private final List<Method> afterMethods;
-    private final List<Method> beforeClassMethods;
-    private final List<Method> afterClassMethods;
+    @NotNull private final Class<?> testClass;
+    @NotNull private final Object instance;
+    @NotNull private final Map<Method, MyTest> testCaseMethods;
+    @NotNull private final List<Method> beforeMethods;
+    @NotNull private final List<Method> afterMethods;
+    @NotNull private final List<Method> beforeClassMethods;
+    @NotNull private final List<Method> afterClassMethods;
 
 
     /**
@@ -48,7 +49,7 @@ public class Tester {
      * @throws IllegalAccessException if we have no rights to instantiate the class.
      * @throws InstantiationException if another instantiation error has occurred.
      */
-    public Tester(Class<?> testClass)
+    public Tester(@NotNull Class<?> testClass)
         throws NoEmptyConstructorException,
         ClassIsAbstractException, IllegalAccessException, InstantiationException {
 
@@ -112,8 +113,9 @@ public class Tester {
 
         return result;
     }
-    
-    private TestResult testMethod(Method method, MyTest annotation) {
+
+    @NotNull
+    private TestResult testMethod(@NotNull Method method, @NotNull MyTest annotation) {
         long start = System.currentTimeMillis();
         if (!annotation.ignore().equals(MyTest.UNASSIGNED_STRING_OPTION)) {
             return new TestWasIgnoredResult(testClass, method, System.currentTimeMillis() - start,
@@ -140,14 +142,15 @@ public class Tester {
         return new SuccessfulResult(testClass, method, System.currentTimeMillis() - start);
     }
 
-    private void runListOfMethods(List<Method> methods)
+    private void runListOfMethods(@NotNull List<Method> methods)
         throws InvocationTargetException, IllegalAccessException {
         for (Method method: methods) {
             method.invoke(instance);
         }
     }
 
-    private List<Method> getAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationClass) {
+    @NotNull
+    private List<Method> getAnnotatedMethods(@NotNull Class<?> clazz, @NotNull Class<? extends Annotation> annotationClass) {
        return Arrays.stream(clazz.getMethods())
             .filter(x->x.getAnnotation(annotationClass) != null)
             .collect(Collectors.toList());

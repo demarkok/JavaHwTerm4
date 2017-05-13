@@ -1,13 +1,17 @@
 package ru.spbau.kaysin.myJunit.testResults;
 
 import java.lang.reflect.Method;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Basic abstract class simplifying the implementing of TestResult.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class BaseTestResult implements TestResult{
+public abstract class BaseTestResult implements TestResult {
+
+    @NotNull
     protected final Class testedClass;
+    @NotNull
     protected final Method testedMethod;
     protected final long time;
 
@@ -17,7 +21,7 @@ public abstract class BaseTestResult implements TestResult{
      * @param testedMethod test-case method
      * @param time testing time in mils.
      */
-    public BaseTestResult(Class testedClass, Method testedMethod, long time) {
+    public BaseTestResult(@NotNull Class testedClass, @NotNull Method testedMethod, long time) {
         this.testedClass = testedClass;
         this.testedMethod = testedMethod;
         this.time = time;
