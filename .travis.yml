@@ -13,6 +13,6 @@ script:
   - gradle build
 
 env:
-  - PROJECT_DIR=FTP
+  - PROJECT_DIR=myJunit
 
 before_install: cd $PROJECT_DIR
