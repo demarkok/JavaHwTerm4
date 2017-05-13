@@ -3,12 +3,20 @@ package ru.spbau.kaysin.myJunit.testResults;
 import java.lang.reflect.Method;
 
 /**
- * Created by demarkok on 13-May-17.
+ * The test result describing the case when the test method threw an exception, but no exception was expected or
+ * we expected different one.
  */
 public class UnexpectedExceptionFailureResult extends BaseTestResult {
 
     private final Class <? extends Throwable> thrownException;
 
+    /**
+     * Creates a new instance.
+     * @param testedClass class which was tested
+     * @param testedMethod test-case method
+     * @param time testing time in mils.
+     * @param thrownException - the unexpected but thrown exception.
+     */
     public UnexpectedExceptionFailureResult(Class testedClass, Method testedMethod, long time,
         Class<? extends Throwable> thrownException) {
         super(testedClass, testedMethod, time);
@@ -23,9 +31,13 @@ public class UnexpectedExceptionFailureResult extends BaseTestResult {
     @Override
     public String getReportMessage() {
         return super.getReportMessage() + "failed. " + "Unexpected exception: " + thrownException.getName() +
-            " time: " + getTime() + "ms.";
+            " time: " + time + "ms.";
     }
 
+    /**
+     * Returns the contained exception (unexpected but thrown).
+     * @return the contained exception (unexpected but thrown).
+     */
     public Class<? extends Throwable> getThrownException() {
         return thrownException;
     }

@@ -3,12 +3,19 @@ package ru.spbau.kaysin.myJunit.testResults;
 import java.lang.reflect.Method;
 
 /**
- * Created by demarkok on 13-May-17.
+ * The test result describing the case when the test method didn't throw any exception, but it was expected.
  */
 public class NoExpectedExceptionFailureResult extends BaseTestResult {
 
     private final Class<? extends Throwable> expectedException;
 
+    /**
+     * Creates a new instance.
+     * @param testedClass class which was tested
+     * @param testedMethod test-case method
+     * @param time testing time in mils.
+     * @param expectedException an exception which was expected but wasn't thrown.
+     */
     public NoExpectedExceptionFailureResult(Class testedClass, Method testedMethod, long time,
             Class<? extends Throwable> expectedException) {
         super(testedClass, testedMethod, time);
@@ -23,9 +30,13 @@ public class NoExpectedExceptionFailureResult extends BaseTestResult {
     @Override
     public String getReportMessage() {
         return super.getReportMessage() + "failed. " + expectedException.getName() + " expected." +
-            " time: " + getTime() + "ms.";
+            " time: " + time + "ms.";
     }
 
+    /**
+     * Returns contained exception which which was expected but wasn't thrown.
+     * @return contained exception which which was expected but wasn't thrown.
+     */
     public Class<? extends Throwable> getExpectedException() {
         return expectedException;
     }

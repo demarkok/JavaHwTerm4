@@ -32,7 +32,7 @@ public class MainTest {
     @Test
     public void successfulAndIgnoredTest()
         throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException,
-        NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {
+        NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException, InstantiationException {
 
         Class classToTest = Class.forName(
             "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithSuccessfulTestAndIgnoredTest");
@@ -47,7 +47,7 @@ public class MainTest {
     @Test
     public void classWithoutTestsTest()
         throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException,
-        NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {
+        NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException, InstantiationException {
 
         Class classToTest = Class.forName(
             "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithoutTests");
@@ -62,7 +62,7 @@ public class MainTest {
     @Test
     public void unexpectedAndExpectedExceptionsTest()
         throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException,
-        ExceptionInBeforeClassException, ExceptionInAfterClassException {
+        ExceptionInBeforeClassException, ExceptionInAfterClassException, InstantiationException {
         Class classToTest = Class.forName(
             "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithUnexpectedExceptionTestsAndSuccessfulTest");
 
@@ -80,7 +80,7 @@ public class MainTest {
     @Test
     public void noExpectedExceptionTest()
         throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException,
-        NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {
+        NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException, InstantiationException {
         Class classToTest = Class.forName(
             "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithTestNotThrowingExpectedException");
 
@@ -94,7 +94,7 @@ public class MainTest {
 
     @Test
     public void beforeAndAfterTest()
-        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {
+        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException, InstantiationException {
         Class classToTest = Class.forName(
             "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithBeforeAndAfter");
 
@@ -106,7 +106,7 @@ public class MainTest {
 
     @Test(expected = ExceptionInAfterClassException.class)
     public void exceptionFromAfterClassTest()
-        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {Class classToTest = Class.forName(
+        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException, InstantiationException {Class classToTest = Class.forName(
         "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithExceptionInAfterClass");
 
         Tester tester = new Tester(classToTest);
@@ -115,7 +115,7 @@ public class MainTest {
 
     @Test
     public void beforeClassAndAfterClassTest()
-        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {
+        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException, InstantiationException {
         Class classToTest = Class.forName(
             "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithBeforeClass");
 

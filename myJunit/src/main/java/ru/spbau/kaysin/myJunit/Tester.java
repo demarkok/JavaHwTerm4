@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 import ru.spbau.kaysin.myJunit.Annotations.After;
 import ru.spbau.kaysin.myJunit.Annotations.AfterClass;
@@ -41,10 +40,17 @@ public class Tester {
     private final List<Method> afterClassMethods;
 
 
-
+    /**
+     * Creates a new Tester.
+     * @param testClass - class to test
+     * @throws NoEmptyConstructorException can't instantiate the class if it hasn't got the empty constructor.
+     * @throws ClassIsAbstractException can't instantiate the class if it's abstract.
+     * @throws IllegalAccessException if we have no rights to instantiate the class.
+     * @throws InstantiationException if another instantiation error has occurred.
+     */
     public Tester(Class<?> testClass)
-        throws ClassNotFoundException, NoEmptyConstructorException,
-        ClassIsAbstractException, IllegalAccessException {
+        throws NoEmptyConstructorException,
+        ClassIsAbstractException, IllegalAccessException, InstantiationException {
 
         this.testClass = testClass;
 
@@ -52,10 +58,6 @@ public class Tester {
             instance = testClass.getConstructor().newInstance();
         } catch (NoSuchMethodException e) {
             throw new NoEmptyConstructorException();
-        } catch (IllegalAccessException e) {
-            throw e;
-        } catch (InstantiationException e) {
-            throw new RuntimeException();
         } catch (InvocationTargetException e) {
             throw new ClassIsAbstractException();
         }
@@ -73,6 +75,16 @@ public class Tester {
 //        System.out.println(testCaseMethods.keySet().stream().map(Method::getName).collect(Collectors.toList()));
     }
 
+    /**
+     * Runs the testing in such order:
+     * 1) Runs all {@link BeforeClass} annotated methods in unspecified order.
+     * 2) For each {@link MyTest} annotated method runs all {@link Before} methods (in unspecified order),
+     * then runs the test-case method itself, then runs all {@link After} methods (in unspecified order).
+     * 3) Runs all {@link AfterClass} annotated methods in unspecified order.
+     * @return list of results for every method annotated as {@link MyTest}.
+     * @throws ExceptionInBeforeClassException if an exception was thrown from method annotated as {@link BeforeClass}
+     * @throws ExceptionInAfterClassException if an exception was thrown from method annotated as {@link AfterClass}
+     */
     public List<TestResult> test()
         throws ExceptionInBeforeClassException, ExceptionInAfterClassException {
 

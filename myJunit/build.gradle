@@ -17,6 +17,19 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.google.guava/guava
     testCompile group: 'com.google.guava', name: 'guava', version: '19.0'
+}
 
 
+task testerJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Tester',
+                'Implementation-Version': version,
+                'Main-Class': 'ru.spbau.kaysin.myJunit.Main'
+    }
+    baseName = 'Tester'
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    with jar
 }
