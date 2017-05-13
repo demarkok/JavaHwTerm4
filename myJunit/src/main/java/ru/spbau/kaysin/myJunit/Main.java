@@ -18,20 +18,20 @@ public class Main {
         }
         String className = args[0];
 
-        Tester tester;
-
-        try {
-            tester = new Tester(className);
-            tester.test();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoEmptyConstructorException e) {
-            e.printStackTrace();
-        } catch (ClassIsAbstractException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+//        Tester tester;
+//
+//        try {
+//            tester = new Tester(className);
+//            tester.test();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (NoEmptyConstructorException e) {
+//            e.printStackTrace();
+//        } catch (ClassIsAbstractException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
 
 
 
