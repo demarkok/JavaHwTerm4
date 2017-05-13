@@ -28,11 +28,12 @@ public class Tester {
     private final Map<Method, MyTest> annotatedMethods;
 
 
-    public Tester(String testClassName)
+    public Tester(Class<?> testClass)
         throws ClassNotFoundException, NoEmptyConstructorException,
         ClassIsAbstractException, IllegalAccessException {
 
-        testClass = Class.forName(testClassName);
+        this.testClass = testClass;
+
         try {
             instance = testClass.getConstructor().newInstance();
         } catch (NoSuchMethodException e) {
@@ -71,7 +72,7 @@ public class Tester {
         } catch (IllegalAccessException e) {
             e.printStackTrace();  // TODO  
         } catch (InvocationTargetException e) {
-            if (e.getCause().getClass().equals(annotation.expected())) {
+            if (annotation.expected().isInstance(e.getCause())) {
                     return new SuccessfulResult(testClass, method);
             }
             return new UnexpectedExceptionFailureResult(testClass, method,
