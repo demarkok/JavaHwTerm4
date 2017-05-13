@@ -1,5 +1,7 @@
 package ru.spbau.kaysin.myJunit;
 
+import ru.spbau.kaysin.myJunit.Annotations.MyTest;
+
 /**
  * Created by demarkok on 04-May-17.
  */

@@ -1,7 +1,7 @@
 package classesToTest;
 
 import java.util.NoSuchElementException;
-import ru.spbau.kaysin.myJunit.MyTest;
+import ru.spbau.kaysin.myJunit.Annotations.MyTest;
 
 /**
  * Class to test.
