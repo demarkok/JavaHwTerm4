@@ -1,3 +1,4 @@
+package ru.spbau.kaysin.myJunitTest;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -5,9 +6,11 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import classesToTest.ClassWithSuccessfulTestAndIgnoredTest;
-import classesToTest.ClassWithTestNotThrowingExpectedException;
-import classesToTest.ClassWithUnexpectedExceptionTestsAndSuccessfulTest;
+import ru.spbau.kaysin.myJunit.Exceptions.ExceptionInAfterClassException;
+import ru.spbau.kaysin.myJunit.Exceptions.ExceptionInBeforeClassException;
+import ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithSuccessfulTestAndIgnoredTest;
+import ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithTestNotThrowingExpectedException;
+import ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithUnexpectedExceptionTestsAndSuccessfulTest;
 import java.util.List;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -28,9 +31,11 @@ public class MainTest {
 
     @Test
     public void successfulAndIgnoredTest()
-        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException {
+        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException,
+        NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {
 
-        Class classToTest = Class.forName("classesToTest.ClassWithSuccessfulTestAndIgnoredTest");
+        Class classToTest = Class.forName(
+            "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithSuccessfulTestAndIgnoredTest");
 
         Tester tester = new Tester(classToTest);
         List<TestResult> result = tester.test();
@@ -41,9 +46,11 @@ public class MainTest {
 
     @Test
     public void classWithoutTestsTest()
-        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException {
+        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException,
+        NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {
 
-        Class classToTest = Class.forName("classesToTest.ClassWithoutTests");
+        Class classToTest = Class.forName(
+            "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithoutTests");
 
         Tester tester = new Tester(classToTest);
         List<TestResult> result = tester.test();
@@ -54,9 +61,10 @@ public class MainTest {
 
     @Test
     public void unexpectedAndExpectedExceptionsTest()
-        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException {
+        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException,
+        ExceptionInBeforeClassException, ExceptionInAfterClassException {
         Class classToTest = Class.forName(
-            "classesToTest.ClassWithUnexpectedExceptionTestsAndSuccessfulTest");
+            "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithUnexpectedExceptionTestsAndSuccessfulTest");
 
         Tester tester = new Tester(classToTest);
         List<TestResult> result = tester.test();
@@ -71,9 +79,10 @@ public class MainTest {
 
     @Test
     public void noExpectedExceptionTest()
-        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException, NoEmptyConstructorException {
+        throws ClassNotFoundException, IllegalAccessException, ClassIsAbstractException,
+        NoEmptyConstructorException, ExceptionInBeforeClassException, ExceptionInAfterClassException {
         Class classToTest = Class.forName(
-            "classesToTest.ClassWithTestNotThrowingExpectedException");
+            "ru.spbau.kaysin.myJunitTest.classesToTest.ClassWithTestNotThrowingExpectedException");
 
         Tester tester = new Tester(classToTest);
         List<TestResult> result = tester.test();

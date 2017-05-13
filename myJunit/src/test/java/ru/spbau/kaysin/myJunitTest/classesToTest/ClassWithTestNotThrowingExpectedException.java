@@ -1,4 +1,4 @@
-package classesToTest;
+package ru.spbau.kaysin.myJunitTest.classesToTest;
 
 import java.util.NoSuchElementException;
 import ru.spbau.kaysin.myJunit.Annotations.MyTest;

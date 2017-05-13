@@ -1,4 +1,4 @@
-package classesToTest;
+package ru.spbau.kaysin.myJunitTest.classesToTest;
 
 /**
  * Class without annotated methods.
