@@ -7,10 +7,10 @@ import java.lang.reflect.Method;
  */
 public class TestWasIgnoredResult extends BaseTestResult {
 
-    private String reason;
+    private final String reason;
 
-    public TestWasIgnoredResult(Class testedClass, Method testedMethod, String reason) {
-        super(testedClass, testedMethod);
+    public TestWasIgnoredResult(Class testedClass, Method testedMethod, long time, String reason) {
+        super(testedClass, testedMethod, time);
         this.reason = reason;
     }
 

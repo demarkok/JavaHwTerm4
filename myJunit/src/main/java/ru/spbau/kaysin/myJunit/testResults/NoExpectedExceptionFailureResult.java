@@ -9,9 +9,9 @@ public class NoExpectedExceptionFailureResult extends BaseTestResult {
 
     private final Class<? extends Throwable> expectedException;
 
-    public NoExpectedExceptionFailureResult(Class testedClass, Method testedMethod,
+    public NoExpectedExceptionFailureResult(Class testedClass, Method testedMethod, long time,
             Class<? extends Throwable> expectedException) {
-        super(testedClass, testedMethod);
+        super(testedClass, testedMethod, time);
         this.expectedException = expectedException;
     }
 

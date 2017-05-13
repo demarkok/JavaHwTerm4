@@ -9,9 +9,9 @@ public class UnexpectedExceptionFailureResult extends BaseTestResult {
 
     private final Class <? extends Throwable> thrownException;
 
-    public UnexpectedExceptionFailureResult(Class testedClass, Method testedMethod,
+    public UnexpectedExceptionFailureResult(Class testedClass, Method testedMethod, long time,
         Class<? extends Throwable> thrownException) {
-        super(testedClass, testedMethod);
+        super(testedClass, testedMethod, time);
         this.thrownException = thrownException;
     }
 

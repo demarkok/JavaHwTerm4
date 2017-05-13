@@ -8,10 +8,12 @@ import java.lang.reflect.Method;
 public abstract class BaseTestResult implements TestResult{
     private final Class testedClass;
     private final Method testedMethod;
+    private final long time;
 
-    public BaseTestResult(Class testedClass, Method testedMethod) {
+    public BaseTestResult(Class testedClass, Method testedMethod, long time) {
         this.testedClass = testedClass;
         this.testedMethod = testedMethod;
+        this.time = time;
     }
 
     protected Class getTestedClass() {
@@ -20,6 +22,10 @@ public abstract class BaseTestResult implements TestResult{
 
     protected Method getTestedMethod() {
         return testedMethod;
+    }
+
+    public long getTime() {
+        return time;
     }
 
     @Override

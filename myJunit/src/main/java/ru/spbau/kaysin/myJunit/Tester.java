@@ -64,8 +64,10 @@ public class Tester {
     }
     
     private TestResult testMethod(Method method, MyTest annotation) {
+        long start = System.currentTimeMillis();
         if (!annotation.ignore().equals(MyTest.UNASSIGNED_STRING_OPTION)) {
-            return new TestWasIgnoredResult(testClass, method, annotation.ignore());
+            return new TestWasIgnoredResult(testClass, method, System.currentTimeMillis() - start,
+                annotation.ignore());
         }
         try {
             method.invoke(instance);
@@ -73,17 +75,17 @@ public class Tester {
             e.printStackTrace();  // TODO  
         } catch (InvocationTargetException e) {
             if (annotation.expected().isInstance(e.getCause())) {
-                    return new SuccessfulResult(testClass, method);
+                    return new SuccessfulResult(testClass, method, System.currentTimeMillis() - start);
             }
-            return new UnexpectedExceptionFailureResult(testClass, method,
+            return new UnexpectedExceptionFailureResult(testClass, method, System.currentTimeMillis() - start,
                 e.getCause().getClass());
         }
         
         if (!annotation.expected().equals(None.class)) {
-            return new NoExpectedExceptionFailureResult(testClass, method, annotation.expected());
+            return new NoExpectedExceptionFailureResult(testClass, method, System.currentTimeMillis() - start, annotation.expected());
         }
 
-        return new SuccessfulResult(testClass, method);
+        return new SuccessfulResult(testClass, method, System.currentTimeMillis() - start);
     }
 
 

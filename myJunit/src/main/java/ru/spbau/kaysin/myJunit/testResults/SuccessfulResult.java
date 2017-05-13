@@ -7,8 +7,8 @@ import java.lang.reflect.Method;
  */
 public class SuccessfulResult extends BaseTestResult {
 
-    public SuccessfulResult(Class testedClass, Method testedMethod) {
-        super(testedClass, testedMethod);
+    public SuccessfulResult(Class testedClass, Method testedMethod, long time) {
+        super(testedClass, testedMethod, time);
     }
 
     @Override
