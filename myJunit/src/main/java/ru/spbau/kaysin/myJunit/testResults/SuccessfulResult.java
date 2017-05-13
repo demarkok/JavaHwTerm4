@@ -18,6 +18,7 @@ public class SuccessfulResult extends BaseTestResult {
 
     @Override
     public String getReportMessage() {
-        return super.getReportMessage() + "successfully passed.";
+        return super.getReportMessage() + "successfully passed." +
+            " time: " + getTime() + "ms.";
     }
 }

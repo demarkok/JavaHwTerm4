@@ -22,7 +22,8 @@ public class NoExpectedExceptionFailureResult extends BaseTestResult {
 
     @Override
     public String getReportMessage() {
-        return super.getReportMessage() + "failed. " + expectedException.getName() + " expected.";
+        return super.getReportMessage() + "failed. " + expectedException.getName() + " expected." +
+            " time: " + getTime() + "ms.";
     }
 
     public Class<? extends Throwable> getExpectedException() {
