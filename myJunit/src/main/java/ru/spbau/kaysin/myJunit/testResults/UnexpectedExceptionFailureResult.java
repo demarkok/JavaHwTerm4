@@ -24,4 +24,8 @@ public class UnexpectedExceptionFailureResult extends BaseTestResult {
     public String getReportMessage() {
         return super.getReportMessage() + "failed. " + "Unexpected exception: " + thrownException.getName();
     }
+
+    public Class<? extends Throwable> getThrownException() {
+        return thrownException;
+    }
 }

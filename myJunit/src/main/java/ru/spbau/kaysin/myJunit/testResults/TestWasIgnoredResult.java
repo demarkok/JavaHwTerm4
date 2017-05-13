@@ -23,4 +23,8 @@ public class TestWasIgnoredResult extends BaseTestResult {
     public String getReportMessage() {
         return super.getReportMessage() + "was ignored." + "Reason: " + reason;
     }
+
+    public String getReason() {
+        return reason;
+    }
 }
