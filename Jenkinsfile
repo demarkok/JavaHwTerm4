@@ -2,17 +2,14 @@ pipeline {
     
     agent { 
         
-        docker { 
-            sh 'service docker start'
-            image 'gradle:alpine' 
-        } 
+        any
     } 
 
     stages {
       
         stage('build') {
             steps {
-               
+               sh 'dnf install gradle'
                sh 'PROJECT_DIR=Lazy'
                sh 'cd $PROJECT_DIR'
                sh 'gradle build' 
