@@ -1,9 +1,12 @@
 pipeline {
     
-    agent { docker { image 'gradle:alpine' } } 
+    agent { 
+        sh 'service docker start'
+        docker { image 'gradle:alpine' } 
+    } 
 
     stages {
-        sh 'service docker start'
+      
         stage('build') {
             steps {
                
