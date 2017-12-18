@@ -1,9 +1,14 @@
 pipeline {
-    agent { docker 'maven:3.3.3' }
+    sh 'service docker start'
+    
+    agent { docker { image 'gradle:alpine' } } 
+
     stages {
         stage('build') {
             steps {
-                sh 'mvn --version'
+               sh 'PROJECT_DIR=Lazy'
+               sh 'cd $PROJECT_DIR'
+               sh 'gradle build' 
             }
         }
     }
