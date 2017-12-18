@@ -4,7 +4,10 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                bash 'mvn --version'
+               PROJECT_DIR=Lazy
+               cd $PROJECT_DIR
+               chmod +x gradlew
+               ./gradlew build 
             }
         }
     }
