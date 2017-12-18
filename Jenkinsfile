@@ -1,5 +1,5 @@
 pipeline {
-    agent { docker 'gradle:alpine' } 
+    agent any
 
     stages {
         stage('build') {
