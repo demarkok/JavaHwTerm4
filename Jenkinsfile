@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
-               PROJECT_DIR=Lazy
+               sh 'PROJECT_DIR=Lazy'
                sh 'cd $PROJECT_DIR'
                sh 'gradle build' 
             }
