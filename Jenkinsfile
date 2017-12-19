@@ -1,8 +1,7 @@
 pipeline {
     
-     docker { image 'gradle:alpine' }
+    agent { docker { image 'gradle:alpine' } }
    
-
     stages {
         stage('build') {
             steps {             
